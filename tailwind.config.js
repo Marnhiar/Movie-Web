@@ -7,7 +7,10 @@ module.exports = {
   ],
   safelist: [
     "text-[#E10856]",
-    "text-[#434343]"
+    "text-[#434343]",
+    "text-[#B7B7B7]",
+    "text-[#555555]",
+    "text-[#E10856]"
   ],
   theme: {
     extend: {
