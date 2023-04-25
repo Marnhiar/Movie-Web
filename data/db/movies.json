@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Black Panther - Wakanda Forever",
+    "image": "/movies/movie1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Эргэж Ирэхгүй Намар",
+    "image": "/movies/movie2.png"
+  },
+  {
+    "id": 3,
+    "name": "Black Adam",
+    "image": "/movies/movie3.png"
+  },
+  {
+    "id": 4,
+    "name": "Хар Ажил",
+    "image": "/movies/movie4.png"
+  },
+  {
+    "id": 5,
+    "name": "Гүртэн",
+    "image": "/movies/movie5.png"
+  },
+  {
+    "id": 6,
+    "name": "Strange World",
+    "image": "/movies/movie6.png"
+  }
+]
