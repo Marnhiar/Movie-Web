@@ -1,28 +1,44 @@
 "use client"
 
 import { useOrderContext } from "@/components/context";
-import { useState } from "react";
-
-const seats = [
-  [0, 1, 0, 0, 0, 0, 0, 0],
-  [0, 1, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 1, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-];
+import { useEffect, useState } from "react";
 
 export default function Order() {
   const { order, changeOrder } = useOrderContext();
   const [selectedRow, setSelectedRow] = useState(-1);
   const [selectedCol, setSelectedCol] = useState(-1);
-  // if (!order.movieId || !order.theaterId || !order.date || !order.time) {
-  //   alert("Захиалга бүрэн биш байна.");
-  //   return;
-  // }
+  const [seats, setSeats] = useState(null);
+  useEffect(() => {
+    fetch("/api/order", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+    }).then(res => res.json())
+      .then(data => {
+        let s =[
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        data.map((item, index) => {
+          const [row, col] = item.seatId.split("-");
+          s[row][col] = 1;
+        });
+        setSeats(s);
+      })
+      .catch(error => console.log(error));
+  }, []);
+
+  if (!order.movieId || !order.theaterId || !order.date || !order.time) {
+    alert("Захиалга бүрэн биш байна.");
+    return;
+  }
+  if (!seats)
+    return <div>...Loading</div>
 
   return (
     <div className="flex flex-row py-[2rem]">
@@ -78,7 +94,24 @@ export default function Order() {
         </div>
       </div>
       {/* Order */}
-      <div className="flex flex-col w-[40%]">
+      <div className="flex flex-col w-[40%] items-center">
+        <button className="w-fit px-[3rem] py-[1rem] bg-[#E10856] rounded-3xl text-2xl font-bold text-white"
+          onClick={async () => {
+            changeOrder("seatId", `${selectedRow+1}-${selectedCol+1}`);
+
+            await fetch("/api/order", {
+              method: "POST", // *GET, POST, PUT, DELETE, etc.
+              headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(order)
+            }).then(res => res.json())
+              .then(data => alert(data))
+              .catch(error => console.log(error));
+          }}>
+          Захиалах
+        </button>
       </div>
     </div >
   );

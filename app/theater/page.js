@@ -20,7 +20,7 @@ export default function Theaters() {
             changeOrder("theaterId", index+1);
           }}>
           <p className="text-2xl font-bold text-white">{item.name}</p>
-          <Image src={item.image} alt={`poster${index}`} width={316} height={400} className="object-cover rounded-xl" />
+          <Image src={item.image} alt={`poster${index}`} width={600} height={800} className="object-cover rounded-xl w-[316px] h-[400px] opacity-80" />
           <p className="font-semibold text-[#868686] text-center">{item.location}</p>
         </Link>
       ))}

@@ -21,19 +21,19 @@ export default async function handler(req, res) {
   res.status(200).json(result);
 }
 
-const post = async (req) => {
-  const id = {id: req.body.id};
-  await client.connect();
-  const db = client.db(database);
-  const collection = db.collection('movies');
-  const movies = await collection.find(id).toArray();
-  return movies;
-}
-
 const get = async (req) => {
   await client.connect();
   const db = client.db(database);
-  const collection = db.collection('movies');
-  const movies = await collection.find({}).toArray();
-  return movies;
+  const collection = db.collection('orders');
+  const orders = await collection.find({}).toArray();
+  return orders;
+}
+
+const post = async (req) => {
+  await client.connect();
+  const db = client.db(database);
+  const collection = db.collection('orders');
+  collection.insertOne(req.body)
+    .then(res => "Successful")
+    .catch(error => error);
 }

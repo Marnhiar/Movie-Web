@@ -28,7 +28,7 @@ export default function Movies() {
     <div className="grid grid-cols-6 gap-[1rem]">
       {movies.map((item, index) => (
         <Link href={`/movie/${item.id}`} key={`movie${index}`} className="flex flex-col items-center">
-          <Image src={item.image} alt={item.name} width={170} height={250} className="object-cover" />
+          <Image src={item.image} alt={item.name} width={170} height={250} className="object-cover w-[170px] h-[250px]" />
           <p className="text-lg font-semibold text-center">{item.name}</p>
         </Link>
       ))}

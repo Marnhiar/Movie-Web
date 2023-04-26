@@ -9,7 +9,7 @@ export default function Movie({ params }) {
   const [movies, setMovies] = useState(null);
   const id = params.movieId;
   useEffect(() => {
-    fetch("http://127.0.0.1:3000/api/movies", {
+    fetch("/api/movies", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
     }).then(res => res.json())
       .then(data => setMovies(data))
@@ -29,10 +29,10 @@ export default function Movie({ params }) {
           <div className="text-3xl font-bold">Одоо гарч буй кинонууд</div>
           <div className="grid grid-cols-2 gap-[1rem]">
             {movies.map((item, index) => {
-              if (index != id - 1 && index <= 4) {
+              if (index !== id - 1 && index <= 4) {
                 return (
-                  <Link href={`/${item.id}`} key={index}>
-                    <Image src={item.image} alt={item.name} width={170} height={250} className="object-cover" />
+                  <Link href={`/movie/${item.id}`} key={index}>
+                    <Image src={item.image} alt={item.name} width={170} height={250} className="object-cover w-[170px] h-[250px]" />
                   </Link>
                 );
               }
@@ -45,29 +45,29 @@ export default function Movie({ params }) {
         <div className="flex flex-col gap-[1rem] w-[25%]">
           <div className="flex flex-col">
             <p className="text-2xl font-semibold">Genres :</p>
-            <p className="text-lg text-[#868686]">Action, Adventure, Drama</p>
+            <p className="text-lg text-[#868686]">{movies[id-1].genres}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-2xl font-semibold">Status :</p>
-            <p className="text-lg text-[#868686]">Ongoing</p>
+            <p className="text-lg text-[#868686]">{movies[id-1].status}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-2xl font-semibold">Director :</p>
-            <p className="text-lg text-[#868686]">Ryan Coogler</p>
+            <p className="text-lg text-[#868686]">{movies[id-1].director}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-2xl font-semibold">Author :</p>
-            <p className="text-lg text-[#868686]">Ryan Coogler</p>
+            <p className="text-lg text-[#868686]">{movies[id-1].author}</p>
           </div>
           <div className="flex flex-col">
             <p className="text-2xl font-semibold">Age Category :</p>
-            <p className="text-lg text-[#868686]"> PG13</p>
+            <p className="text-lg text-[#868686]">{movies[id-1].age}</p>
           </div>
           <OrderButton id={id} />
         </div>
         <div className="flex flex-col w-[40%] gap-[1rem]">
           <p className="text-2xl font-semibold">Товч Тайлбар</p>
-          <p className="text-lg text-[#868686]">Queen Ramonda, Shuri, M'Baku, Okoye and the Dora Milaje fight to protect the kingdom of Wakanda from intervening world powers in the wake of King T'Challa's death. As the Wakandans strive to embrace their next chapter, the heroes must band together with the help of War Dog Nakia and Everett Ross and forge a new path for their nation.</p>
+          <p className="text-lg text-[#868686]">{movies[id-1].description}</p>
         </div>
       </div>
     </div>

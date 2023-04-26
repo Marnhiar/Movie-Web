@@ -17,6 +17,11 @@ export default function Theater() {
     alert("Театраа эхлээд сонгоно уу.");
     return;
   }
+  Date.prototype.addDays = function (days) {
+    let date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+  }
   function TicketSvg({ index }) {
     return (
       <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg" className={`w-[84px] h-[84px] text-[${selected === index ? "#E10856" : "#434343"}]`}>
@@ -28,15 +33,16 @@ export default function Theater() {
     return (
       <div className="flex flex-row gap-[8px]">
         {[...Array(4)].map((item, index) => (
-          <div className="relative cursor-pointer"
+          <div key={index} className="relative cursor-pointer"
             onClick={() => {
               setSelected(index);
-              changeOrder("date", `${today.getMonth() + 1}-${today.getDate() + index}`);
+              const date = today.addDays(index);
+              changeOrder("date", `${date.getMonth() + 1}-${date.getDate()}`);
             }}>
             <TicketSvg index={index} />
             <div className="absolute flex flex-col left-[25%] top-[20%] items-center">
-              <p className="font-semibold">{today.getMonth() + 1} сар</p>
-              <p className="font-bold text-xl">{today.getDate() + index}</p>
+              <p className="font-semibold">{today.addDays(index).getMonth() + 1} сар</p>
+              <p className="font-bold text-xl">{today.addDays(index).getDate()}</p>
             </div>
           </div>
         ))}
@@ -50,7 +56,7 @@ export default function Theater() {
         <div className="flex flex-col gap-[2rem]">
           <Tickets />
           {times.map((item, index) => (
-            <Link href="/order" className="flex flex-row w-[280px] h-[80px] px-[1rem] gap-[3rem] items-center border-2 border-[#525252] rounded-md"
+            <Link key={index} href="/order" className="flex flex-row w-[280px] h-[80px] px-[1rem] gap-[3rem] items-center border-2 border-[#525252] rounded-md"
               onClick={() => {
                 changeOrder("time", item);
               }}>
@@ -60,7 +66,7 @@ export default function Theater() {
           ))}
         </div>
         <div className="flex flex-col">
-          <Image src={`/theaters/theater${order.theaterId}`} alt="theaterPoster" width={710} height={430} />
+          <Image src={`/theaters/theater${order.theaterId}.jpg`} alt="theaterPoster" width={800} height={800} className="w-[710px] h-[430px]" />
           <p className="text-2xl font-bold text-[#868686]">{theaters[order.theaterId].location}</p>
         </div>
       </div>
