@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "name": "Black Panther - Wakanda Forever",
+    "description": "The people of Wakanda fight to protect their home from intervening world powers as they mourn the death of King T'Challa.",
+    "image": "/movies/movie1.jpg",
+    "genres": "Action, Adventure, Drama",
+    "status": "Ongoing",
+    "director": "Ryan Coogler",
+    "author": "Ryan Coogler, Joe Robert Cole, Stan Lee",
+    "age": "PG13"
+  },
+  {
+    "id": 2,
+    "name": "Эргэж Ирэхгүй Намар",
+    "description": "",
+    "image": "/movies/movie2.jpg",
+    "genres": "",
+    "status": "Ongoing",
+    "director": "",
+    "author": "",
+    "age": ""
+  },
+  {
+    "id": 3,
+    "name": "Black Adam",
+    "description": "",
+    "image": "/movies/movie3.jpg",
+    "genres": "",
+    "status": "Ongoing",
+    "director": "",
+    "author": "",
+    "age": ""
+  },
+  {
+    "id": 4,
+    "name": "Хар Ажил",
+    "description": "",
+    "image": "/movies/movie4.jpg",
+    "genres": "",
+    "status": "Ongoing",
+    "director": "",
+    "author": "",
+    "age": ""
+  },
+  {
+    "id": 5,
+    "name": "Гүртэн",
+    "description": "",
+    "image": "/movies/movie5.jpg",
+    "genres": "",
+    "status": "Ongoing",
+    "director": "",
+    "author": "",
+    "age": ""
+  },
+  {
+    "id": 6,
+    "name": "Strange World",
+    "description": "",
+    "image": "/movies/movie6.jpg",
+    "genres": "",
+    "status": "Ongoing",
+    "director": "",
+    "author": "",
+    "age": ""
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Өргөө 1",
+    "location": "3-р хороолол",
+    "image": "/theaters/theater1.jpg"
+  },
+  {
+    "name": "Өргөө 2",
+    "location": "Мэдээлэл Технологийн Үндэсний Парк",
+    "image": "/theaters/theater2.jpg"
+  },
+  {
+    "name": "Өргөө 3 IMAX",
+    "location": "Шангри-Ла худалдааны төв",
+    "image": "/theaters/theater3.jpg"
+  },
+  {
+    "name": "Тэнгис",
+    "location": "Эрх чөлөөний талбай",
+    "image": "/theaters/theater4.jpg"
+  },
+  {
+    "name": "Гэгээнтэн",
+    "location": "Зайсангийн Гудамж",
+    "image": "/theaters/theater5.jpg"
+  },
+  {
+    "name": "CinemaNext",
+    "location": "16-р хороолол",
+    "image": "/theaters/theater6.jpg"
+  }
+]
