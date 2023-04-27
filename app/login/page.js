@@ -1,14 +1,16 @@
 "use client";
 
-import { useOrderContext } from '@/components/context';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { changeLogin } = useOrderContext();
+
+  useEffect(() => {
+    localStorage.setItem("login", false);
+  }, [])
 
   const handleLogin = async () => {
     const res = await fetch("/api/login", {
@@ -21,7 +23,7 @@ export default function Login() {
     });
     const data = await res.json();
     if (res.ok) {
-      changeLogin();
+      localStorage.setItem("login", true);
       router.push("/admin");
     }
     else {

@@ -1,13 +1,13 @@
 "use client";
 
-import { useOrderContext } from "@/components/context";
 import { useEffect, useState } from "react";
 
 export default function Admin() {
-  const { login } = useOrderContext();
+  const [login, setLogin] = useState(false);
   const [orders, setOrders] = useState(null);
 
   useEffect(() => {
+    setLogin(localStorage.getItem("login"));
     fetch("/api/order", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
     }).then(res => res.json())
@@ -21,6 +21,7 @@ export default function Admin() {
     return <div className="w-full text-white">Unauthorized</div>
   if (!orders)
     return <div className="w-full text-white">...Loading</div>
+  
   return (
     <div className="flex flex-col w-full">
       <table className="bg-[#282828] rounded-xl p-4">

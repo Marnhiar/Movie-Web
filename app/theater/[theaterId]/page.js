@@ -1,33 +1,32 @@
 "use client";
 
-import { useOrderContext } from "@/components/context";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function Theater({params}) {
-  const { order, changeOrder } = useOrderContext();
+export default function Theater({ params }) {
+  const [order, setOrder] = useState(null);
   const [theater, setTheater] = useState(null);
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState(0);
   const today = new Date();
   const times = ["12:00", "14:20", "17:50", "21:00"];
-  if (!order.theaterId) {
-    alert("Театраа эхлээд сонгоно уу.");
-    return;
-  }
   Date.prototype.addDays = function (days) {
     let date = new Date();
     date.setDate(date.getDate() + days);
     return date;
   }
   useEffect(() => {
+    let temp = JSON.parse(localStorage.getItem("order"));
+    temp.date = `${today.getMonth()+1}-${today.getDate()}`;
+    localStorage.setItem("order", JSON.stringify(temp));
+    setOrder(temp);
     fetch("/api/theaters", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({"id": parseInt(params.theaterId)})
+      body: JSON.stringify({ "id": parseInt(params.theaterId) })
     }).then(res => res.json())
       .then(data => {
         setTheater(data);
@@ -36,7 +35,11 @@ export default function Theater({params}) {
   }, []);
   if (!theater)
     return <div>...Loading</div>
-  
+  if (!order.theaterId) {
+    alert("Театраа эхлээд сонгоно уу.");
+    return;
+  }
+
   function TicketSvg({ index }) {
     return (
       <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg" className={`w-[84px] h-[84px] text-[${selected === index ? "#E10856" : "#434343"}]`}>
@@ -51,8 +54,10 @@ export default function Theater({params}) {
           <div key={index} className="relative cursor-pointer"
             onClick={() => {
               setSelected(index);
+              let temp = JSON.parse(localStorage.getItem("order"));
               const date = today.addDays(index);
-              changeOrder("date", `${date.getMonth() + 1}-${date.getDate()}`);
+              temp.date = `${date.getMonth() + 1}-${date.getDate()}`;
+              localStorage.setItem("order", JSON.stringify(temp));
             }}>
             <TicketSvg index={index} />
             <div className="absolute flex flex-col left-[25%] top-[20%] items-center">
@@ -73,7 +78,9 @@ export default function Theater({params}) {
           {times.map((item, index) => (
             <Link key={index} href="/order" className="flex flex-row w-[280px] h-[80px] px-[1rem] gap-[3rem] items-center border-2 border-[#525252] rounded-md"
               onClick={() => {
-                changeOrder("time", item);
+                let temp = JSON.parse(localStorage.getItem("order"));
+                temp.time = item;
+                localStorage.setItem("order", JSON.stringify(temp));
               }}>
               <Image src="/theaters/clock.svg" alt="clock" width={40} height={40} />
               <div className="font-semibold text-3xl">{item}</div>
