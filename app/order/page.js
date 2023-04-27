@@ -111,7 +111,7 @@ export default function Order() {
           onClick={async () => {
             changeOrder("seatId", `${selectedRow+1}-${selectedCol+1}`);
             const today = new Date();
-            changeOrder("orderDate", `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`);
+            changeOrder("orderDate", `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`);
 
             const res = await fetch("/api/order", {
               method: "PUT", // *GET, POST, PUT, DELETE, etc.
