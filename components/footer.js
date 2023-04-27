@@ -3,8 +3,8 @@ import Link from "next/link";
 export default function Footer() {
   const students = [
     "Г.Лундаажамц /B200910052/",
-    "М.Тэмүүжин ",
-    "У.Гүррагчаа "
+    "М.Тэмүүжин /B200910024/",
+    "У.Гүррагчаа /B200910006/"
   ];
 
   return (

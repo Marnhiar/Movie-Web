@@ -26,23 +26,23 @@ export default async function handler(req, res) {
 const get = async (req) => {
   await client.connect();
   const db = client.db(database);
-  const collection = db.collection('orders');
-  const orders = await collection.find({}).toArray();
-  return orders;
+  const collection = db.collection('theaters');
+  const res = await collection.find({}).toArray();
+  return res;
 }
 
 const post = async (req) => {
   await client.connect();
   const db = client.db(database);
-  const collection = db.collection('orders');
-  const orders = await collection.find(req.body).toArray();
-  return orders;
+  const collection = db.collection('theaters');
+  const res = await collection.findOne(req.body);
+  return res;
 }
 
 const put = async (req) => {
   await client.connect();
   const db = client.db(database);
-  const collection = db.collection('orders');
+  const collection = db.collection('theaters');
   const res = await collection.insertOne(req.body);
   return res;
 }

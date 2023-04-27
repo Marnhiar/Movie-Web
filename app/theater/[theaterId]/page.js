@@ -1,27 +1,45 @@
 "use client";
 
-import { useOrderContext } from "@/components/context";
 import Image from "next/image";
 import Link from "next/link";
-import theaters from "@/data/db/theaters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Theater() {
-  const { order, changeOrder } = useOrderContext();
-  console.log(order);
+export default function Theater({ params }) {
+  const [order, setOrder] = useState(null);
+  const [theater, setTheater] = useState(null);
   const [selected, setSelected] = useState(0);
   const today = new Date();
-  changeOrder("date", `${today.getMonth() + 1}-${today.getDate()}`);
   const times = ["12:00", "14:20", "17:50", "21:00"];
+  Date.prototype.addDays = function (days) {
+    let date = new Date();
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+  useEffect(() => {
+    let temp = JSON.parse(localStorage.getItem("order"));
+    temp.date = `${today.getMonth()+1}-${today.getDate()}`;
+    localStorage.setItem("order", JSON.stringify(temp));
+    setOrder(temp);
+    fetch("/api/theaters", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "id": parseInt(params.theaterId) })
+    }).then(res => res.json())
+      .then(data => {
+        setTheater(data);
+      })
+      .catch(error => alert(error));
+  }, []);
+  if (!theater)
+    return <div>...Loading</div>
   if (!order.theaterId) {
     alert("Театраа эхлээд сонгоно уу.");
     return;
   }
-  Date.prototype.addDays = function (days) {
-    let date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-  }
+
   function TicketSvg({ index }) {
     return (
       <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg" className={`w-[84px] h-[84px] text-[${selected === index ? "#E10856" : "#434343"}]`}>
@@ -36,8 +54,10 @@ export default function Theater() {
           <div key={index} className="relative cursor-pointer"
             onClick={() => {
               setSelected(index);
+              let temp = JSON.parse(localStorage.getItem("order"));
               const date = today.addDays(index);
-              changeOrder("date", `${date.getMonth() + 1}-${date.getDate()}`);
+              temp.date = `${date.getMonth() + 1}-${date.getDate()}`;
+              localStorage.setItem("order", JSON.stringify(temp));
             }}>
             <TicketSvg index={index} />
             <div className="absolute flex flex-col left-[25%] top-[20%] items-center">
@@ -51,14 +71,16 @@ export default function Theater() {
   }
   return (
     <div className="flex flex-col w-full h-[650px] p-[1rem] bg-[#282828] rounded-xl text-white gap-[2rem]">
-      <div className="text-4xl font-bold">Кино театраар гарах хуваарь</div>
+      <div className="text-4xl font-bold">{theater.name} театраар гарах хуваарь</div>
       <div className="flex flex-row px-[1rem] gap-[2rem] mx-auto">
         <div className="flex flex-col gap-[2rem]">
           <Tickets />
           {times.map((item, index) => (
             <Link key={index} href="/order" className="flex flex-row w-[280px] h-[80px] px-[1rem] gap-[3rem] items-center border-2 border-[#525252] rounded-md"
               onClick={() => {
-                changeOrder("time", item);
+                let temp = JSON.parse(localStorage.getItem("order"));
+                temp.time = item;
+                localStorage.setItem("order", JSON.stringify(temp));
               }}>
               <Image src="/theaters/clock.svg" alt="clock" width={40} height={40} />
               <div className="font-semibold text-3xl">{item}</div>
@@ -66,8 +88,8 @@ export default function Theater() {
           ))}
         </div>
         <div className="flex flex-col">
-          <Image src={`/theaters/theater${order.theaterId}.jpg`} alt="theaterPoster" width={800} height={800} className="w-[710px] h-[430px]" />
-          <p className="text-2xl font-bold text-[#868686]">{theaters[order.theaterId].location}</p>
+          <Image src={theater.image} alt="theaterPoster" width={800} height={800} className="w-[710px] h-[430px]" />
+          <p className="text-2xl font-bold text-[#868686]">{theater.location}</p>
         </div>
       </div>
     </div>

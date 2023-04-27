@@ -1,6 +1,5 @@
 "use client";
 
-import { useOrderContext } from "@/components/context";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,6 +8,14 @@ export default function Movie({ params }) {
   const [movies, setMovies] = useState(null);
   const id = params.movieId;
   useEffect(() => {
+    localStorage.setItem("order", JSON.stringify({
+      movieId: "",
+      theaterId: "",
+      date: "",
+      time: "",
+      seatId: "",
+      orderDate: ""
+    }));
     fetch("/api/movies", {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
     }).then(res => res.json())
@@ -75,13 +82,12 @@ export default function Movie({ params }) {
 }
 
 function OrderButton({ id }) {
-  const { order, changeOrder } = useOrderContext();
-  console.log(order);
-
   return (
     <Link href="/theater" className="w-fit px-[1rem] py-[0.5rem] border-white border rounded-l-[50px] rounded-r-[50px] text-white cursor-pointer"
-      onClick={() => {
-        changeOrder("movieId", id);
+      onClick={(e) => {
+        let temp = JSON.parse(localStorage.getItem("order"));
+        temp.movieId = parseInt(id);
+        localStorage.setItem("order", JSON.stringify(temp));
       }}>
       Тасалбар Захиалах
     </Link>

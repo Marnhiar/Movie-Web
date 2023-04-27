@@ -1,19 +1,27 @@
 "use client"
 
-import { useOrderContext } from "@/components/context";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Order() {
-  const { order, changeOrder } = useOrderContext();
+  const [order, setOrder] = useState(null);
   const [selectedRow, setSelectedRow] = useState(-1);
   const [selectedCol, setSelectedCol] = useState(-1);
   const [seats, setSeats] = useState(null);
+  
   useEffect(() => {
+    const temp = JSON.parse(localStorage.getItem("order"));
+    setOrder(temp);
     fetch("/api/order", {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "theaterId": temp.theaterId, "movieId": temp.movieId, "date": temp.date, "time": temp.time })
     }).then(res => res.json())
       .then(data => {
-        let s =[
+        let s = [
           [0, 0, 0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0, 0, 0],
           [0, 0, 0, 0, 0, 0, 0, 0],
@@ -26,19 +34,18 @@ export default function Order() {
         ]
         data.map((item, index) => {
           const [row, col] = item.seatId.split("-");
-          s[row][col] = 1;
+          s[row - 1][col - 1] = 1;
         });
         setSeats(s);
       })
       .catch(error => console.log(error));
   }, []);
 
-  if (!order.movieId || !order.theaterId || !order.date || !order.time) {
-    alert("Захиалга бүрэн биш байна.");
-    return;
-  }
   if (!seats)
     return <div>...Loading</div>
+  if (!order.movieId || !order.theaterId || !order.date || !order.time) {
+    return <div className="w-full text-center text-white">Захиалга бүрэн биш байна.</div>;
+  }
 
   return (
     <div className="flex flex-row py-[2rem]">
@@ -92,23 +99,38 @@ export default function Order() {
             </>
           ))}
         </div>
+        <div className="flex flex-row gap-[1rem] text-white">
+          <Chair state={0} />
+          <div>Сул суудал</div>
+          <Chair state={1} />
+          <div>Дүүрсэн суудал</div>
+        </div>
       </div>
       {/* Order */}
       <div className="flex flex-col w-[40%] items-center">
         <button className="w-fit px-[3rem] py-[1rem] bg-[#E10856] rounded-3xl text-2xl font-bold text-white"
           onClick={async () => {
-            changeOrder("seatId", `${selectedRow+1}-${selectedCol+1}`);
+            let temp = JSON.parse(localStorage.getItem("order"));
+            temp.seatId = `${selectedRow + 1}-${selectedCol + 1}`;
+            const today = new Date();
+            temp.orderDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            localStorage.setItem("order", JSON.stringify(temp));
+            setOrder(temp);
 
-            await fetch("/api/order", {
-              method: "POST", // *GET, POST, PUT, DELETE, etc.
+            const res = await fetch("/api/order", {
+              method: "PUT", // *GET, POST, PUT, DELETE, etc.
               headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
               },
-              body: JSON.stringify(order)
-            }).then(res => res.json())
-              .then(data => alert(data))
-              .catch(error => console.log(error));
+              body: JSON.stringify(temp)
+            });
+            if (res.ok) {
+              alert("Successful");
+              window.location.reload(false);
+            }
+            else
+              alert(res);
           }}>
           Захиалах
         </button>
