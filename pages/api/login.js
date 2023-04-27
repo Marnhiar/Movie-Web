@@ -13,26 +13,20 @@ export default async function handler(req, res) {
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   });
   let result = null;
-  if (req.method === "GET")
-    result = await get(req);
-  else if (req.method === "POST")
+  if (req.method === "POST")
     result = await post(req);
 
-  res.status(200).json(result);
+  if (result)
+    res.status(200).json("Successful");
+  res.status(401).json("Wrong username or password");
 }
 
 const post = async (req) => {
   await client.connect();
   const db = client.db(database);
-  const collection = db.collection('movies');
-  const movies = await collection.findOne(req.body);
-  return movies;
-}
-
-const get = async (req) => {
-  await client.connect();
-  const db = client.db(database);
-  const collection = db.collection('movies');
-  const movies = await collection.find({}).toArray();
-  return movies;
+  const collection = db.collection('users');
+  const login = await collection.findOne(req.body);
+  if (!login)
+    return false;
+  return true;
 }

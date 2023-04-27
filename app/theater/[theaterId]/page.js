@@ -3,12 +3,11 @@
 import { useOrderContext } from "@/components/context";
 import Image from "next/image";
 import Link from "next/link";
-import theaters from "@/data/db/theaters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Theater() {
+export default function Theater({params}) {
   const { order, changeOrder } = useOrderContext();
-  console.log(order);
+  const [theater, setTheater] = useState(null);
   const [selected, setSelected] = useState(0);
   const today = new Date();
   changeOrder("date", `${today.getMonth() + 1}-${today.getDate()}`);
@@ -22,6 +21,23 @@ export default function Theater() {
     date.setDate(date.getDate() + days);
     return date;
   }
+  useEffect(() => {
+    fetch("/api/theaters", {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"id": parseInt(params.theaterId)})
+    }).then(res => res.json())
+      .then(data => {
+        setTheater(data);
+      })
+      .catch(error => alert(error));
+  }, []);
+  if (!theater)
+    return <div>...Loading</div>
+  
   function TicketSvg({ index }) {
     return (
       <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg" className={`w-[84px] h-[84px] text-[${selected === index ? "#E10856" : "#434343"}]`}>
@@ -35,6 +51,7 @@ export default function Theater() {
         {[...Array(4)].map((item, index) => (
           <div key={index} className="relative cursor-pointer"
             onClick={() => {
+              console.log(theater);
               setSelected(index);
               const date = today.addDays(index);
               changeOrder("date", `${date.getMonth() + 1}-${date.getDate()}`);
@@ -51,7 +68,7 @@ export default function Theater() {
   }
   return (
     <div className="flex flex-col w-full h-[650px] p-[1rem] bg-[#282828] rounded-xl text-white gap-[2rem]">
-      <div className="text-4xl font-bold">Кино театраар гарах хуваарь</div>
+      <div className="text-4xl font-bold">{theater.name} театраар гарах хуваарь</div>
       <div className="flex flex-row px-[1rem] gap-[2rem] mx-auto">
         <div className="flex flex-col gap-[2rem]">
           <Tickets />
@@ -66,8 +83,8 @@ export default function Theater() {
           ))}
         </div>
         <div className="flex flex-col">
-          <Image src={`/theaters/theater${order.theaterId}.jpg`} alt="theaterPoster" width={800} height={800} className="w-[710px] h-[430px]" />
-          <p className="text-2xl font-bold text-[#868686]">{theaters[order.theaterId].location}</p>
+          <Image src={theater.image} alt="theaterPoster" width={800} height={800} className="w-[710px] h-[430px]" />
+          <p className="text-2xl font-bold text-[#868686]">{theater.location}</p>
         </div>
       </div>
     </div>

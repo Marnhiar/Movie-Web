@@ -11,7 +11,8 @@ export function OrderProvider({ children }) {
       theaterId: "",
       date: "",
       time: "",
-      seatId: ""
+      seatId: "",
+      orderDate: ""
     }
   );
   function changeOrder(name, value) {
@@ -19,9 +20,13 @@ export function OrderProvider({ children }) {
     order[name] = value;
     setOrder(temp);
   }
+  const [login, setLogin] = useState(false);
+  function changeLogin() {
+    setLogin(!login);
+  }
 
   return (
-    <Context.Provider value={{ order, changeOrder }}>{children}</Context.Provider>
+    <Context.Provider value={{ order, changeOrder, login, changeLogin }}>{children}</Context.Provider>
   );
 }
 

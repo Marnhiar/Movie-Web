@@ -1,26 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import theaters from "@/data/db/theaters";
 import Link from "next/link";
 import { useOrderContext } from "@/components/context";
+import { useEffect, useState } from "react";
 
 export default function Theaters() {
+  const [theaters, setTheaters] = useState(null);
   const { order, changeOrder } = useOrderContext();
-  console.log(order);
+  useEffect(() => {
+    fetch("/api/theaters", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+    }).then(res => res.json())
+      .then(data => setTheaters(data))
+      .catch(error => alert(error));
+  }, []);
+  if (!theaters)
+    return <div>...Loading</div>
 
   return (
     <div className="grid grid-cols-3 mx-auto w-fit gap-x-[2rem] gap-y-[1rem]">
       {theaters.map((item, index) => (
-        <Link href={!order.movieId ? "/theater/#" :`/theater/${index + 1}`} key={index} className="flex flex-col"
+        <Link href={!order.movieId ? "/theater/#" :`/theater/${item.id}`} key={index} className="flex flex-col"
           onClick={() => {
             if (!order.movieId)
               alert("Киногоо эхлээд сонгоно уу.");
             else
-            changeOrder("theaterId", index+1);
+              changeOrder("theaterId", item.id);
           }}>
           <p className="text-2xl font-bold text-white">{item.name}</p>
-          <Image src={item.image} alt={`poster${index}`} width={600} height={800} className="object-cover rounded-xl w-[316px] h-[400px] opacity-80" />
+          <Image src={item.image} alt={`poster${item.id}`} width={600} height={800} className="object-cover rounded-xl w-[316px] h-[400px] opacity-80" />
           <p className="font-semibold text-[#868686] text-center">{item.location}</p>
         </Link>
       ))}
