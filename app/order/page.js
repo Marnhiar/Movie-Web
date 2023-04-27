@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Order() {
@@ -112,8 +111,8 @@ export default function Order() {
           onClick={async () => {
             let temp = JSON.parse(localStorage.getItem("order"));
             temp.seatId = `${selectedRow + 1}-${selectedCol + 1}`;
-            const today = new Date();
-            temp.orderDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            const today = new Date().toISOString();
+            temp.orderDate = today;
             localStorage.setItem("order", JSON.stringify(temp));
             setOrder(temp);
 
