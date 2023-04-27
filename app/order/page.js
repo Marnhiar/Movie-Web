@@ -17,7 +17,7 @@ export default function Order() {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({"theaterId": order.theaterId, "movieId": order.movieId, "date": order.date})
+      body: JSON.stringify({"theaterId": order.theaterId, "movieId": order.movieId, "date": order.date, "time": "order.time"})
     }).then(res => res.json())
       .then(data => {
         let s =[

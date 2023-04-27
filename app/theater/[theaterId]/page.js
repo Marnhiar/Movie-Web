@@ -8,16 +8,15 @@ import { useEffect, useState } from "react";
 export default function Theater({params}) {
   const { order, changeOrder } = useOrderContext();
   const [theater, setTheater] = useState(null);
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(-1);
   const today = new Date();
-  changeOrder("date", `${today.getMonth() + 1}-${today.getDate()}`);
   const times = ["12:00", "14:20", "17:50", "21:00"];
   if (!order.theaterId) {
     alert("Театраа эхлээд сонгоно уу.");
     return;
   }
   Date.prototype.addDays = function (days) {
-    let date = new Date(this.valueOf());
+    let date = new Date();
     date.setDate(date.getDate() + days);
     return date;
   }
@@ -51,7 +50,6 @@ export default function Theater({params}) {
         {[...Array(4)].map((item, index) => (
           <div key={index} className="relative cursor-pointer"
             onClick={() => {
-              console.log(theater);
               setSelected(index);
               const date = today.addDays(index);
               changeOrder("date", `${date.getMonth() + 1}-${date.getDate()}`);
